@@ -8,11 +8,11 @@ add.o : add.s
 
 #compile numbers.c
 numbers.o : numbers.c
-	gcc -m32 -g -Wall -c -o numbers.o numbers.compile
+	gcc -m32 -g -Wall -c -o numbers.o numbers.c
 
 #compile main.c
 main.o : main.c
-	gcc -m32 -g -Wall -o numbers.o numbers.c
+	gcc -m32 -g -Wall -c -o main.o main.c
 
 #clean
 clean :
