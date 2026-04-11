@@ -1,16 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-FILE* output=stdout;
-FILE* input=stdin;
-FILE* errors=stderr;
+FILE* output;
+FILE* input;
+FILE* errors;
+unsigned char password[] = "1234";
 
 int encode(int c){
     return c;
 }
 
-unsigned char password[] = "1234";
+
 int main(int argc,char **argv){
+    output=stdout;
+    input=stdin;
+    errors=stderr;
     int debug=1; //default is on
     for(int i=0;i<argc;i++){
         if(debug){
@@ -20,7 +24,8 @@ int main(int argc,char **argv){
             debug=0;
         }
         //strncmp for +D comparsion only
-        if(strncmp(argv[i],"+D",2)==0 && strcmp(argv[i]+2,password)==0){
+        //(char*) casting from unsigned char to string in order to use strncmp
+        if(strncmp(argv[i],"+D",2)==0 && strcmp(argv[i]+2,(char*)password)==0){
             debug=1;
         }
     }
@@ -29,7 +34,9 @@ int main(int argc,char **argv){
     while(feof(input)==0){//we have more input
         int c = fgetc(input);
         c = encode(c);
-        fputc(c,output);
+        if(c!=EOF){ //handle last garbage char
+            fputc(c,output);
+        }
     }
     fclose(output);
     return 0;
