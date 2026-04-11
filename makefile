@@ -1,3 +1,6 @@
+#=============================================================#
+#====================actual assignment========================#
+#=============================================================#
 #link
 exe : add.o main.o numbers.o
 	gcc -m32 -g -Wall -o exe add.o main.o numbers.o
@@ -16,4 +19,18 @@ main.o : main.c
 
 #clean
 clean :
-	rm -f *.o exe
+	rm -f *.o exe my_echo
+
+
+#=============================================================#
+#=========================my_echo=============================#
+#=============================================================#
+#link 
+my_echo : my_echo.o
+	gcc -m32 -g -Wall -o my_echo my_echo.o
+
+#compile my_echo.c
+my_echo.o : my_echo.c
+	gcc -m32 -g -Wall -c -o my_echo.o my_echo.c
+
+
