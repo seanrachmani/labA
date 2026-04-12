@@ -7,13 +7,13 @@ FILE* errors;
 unsigned char password[] = "my_password1";
 char* encstr="A"; //encoder string
 int add,subtract;
-int index; //indicate where are we in the enc string
+int idx; //indicate where are we in the enc string
 
 
 int encode(int c){
-    if(c>='a'&&c<='z' || c>='A'&&c<='Z'){
+    if((c>='a'&&c<='z') || (c>='A'&&c<='Z')){
         if(add){
-            int addition = encstr[index]-'A';
+            int addition = encstr[idx]-'A';
             if(c>='a'&&c<='z' && c+addition>'z'){ 
                 addition=addition-26; //Z-A cyclic
             }
@@ -23,7 +23,7 @@ int encode(int c){
             c = c+addition; 
         }
         if(subtract){
-            int subtraction = encstr[index]-'A';
+            int subtraction = encstr[idx]-'A';
             if(c>='a'&&c<='z' && c-subtraction<'a'){
                 subtraction=subtraction-26;//A-Z cyclic
             }
@@ -32,7 +32,7 @@ int encode(int c){
             }
             c = c-subtraction;    
         }
-        index++; //only when we encoded relevant lettters(not for all stding)
+        idx++; //only when we encoded relevant lettters(not for all stding)
     }
     return c;
 }
@@ -72,11 +72,11 @@ int main(int argc,char **argv){
     }
 
     
-    index=0; 
+    idx=0; 
     while(feof(input)==0){//we have more input
         int c = fgetc(input);
-        if(encstr[index]=='\0'){//cyclic
-            index=0;
+        if(encstr[idx]=='\0'){//cyclic
+            idx=0;
         }
         c = encode(c);
         if(c!=EOF){ //handle last garbage char
