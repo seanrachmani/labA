@@ -38,6 +38,9 @@ int encode(int c){
 }
 
 
+
+
+
 int main(int argc,char **argv){
     add=0;
     subtract=0;
