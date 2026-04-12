@@ -4,7 +4,7 @@
 FILE* output;
 FILE* input;
 FILE* errors;
-unsigned char password[] = "1234";
+unsigned char password[] = "my_password1";
 char* encstr="A"; //encoder string
 int add,subtract;
 int index; //indicate where are we in the enc string
@@ -14,21 +14,23 @@ int encode(int c){
     if(c>='a'&&c<='z' || c>='A'&&c<='Z'){
         if(add){
             int addition = encstr[index]-'A';
-            c = c+addition;
-            if(c>'Z'||c>'z'){ 
-                c = c-addition;//get rid of fake addition
+            if(c>='a'&&c<='z' && c+addition>'z'){ 
                 addition=addition-26; //Z-A cyclic
-                c = c+addition; //correct addition
             }
+            if(c>='A'&&c<='Z' && c+addition>'Z'){
+                addition=addition-26;
+            }
+            c = c+addition; 
         }
         if(subtract){
             int subtraction = encstr[index]-'A';
-            c = c - subtraction;
-            if(c<'A' || c<'a'){ //A-Z cyclic
-                c = c + subtraction;
-                subtraction=subtraction+26;
-                c = c - subtraction;
+            if(c>='a'&&c<='z' && c-subtraction<'a'){
+                subtraction=subtraction-26;//A-Z cyclic
             }
+            if(c>='A'&&c<='Z' && c-subtraction<'A'){
+                subtraction=subtraction-26;
+            }
+            c = c-subtraction;    
         }
         index++; //only when we encoded relevant lettters(not for all stding)
     }
