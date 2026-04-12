@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-FILE* output;
-FILE* input;
-FILE* errors;
+FILE* outfile;
+FILE* infile;
+FILE* errfile;
 unsigned char password[] = "my_password1";
 char* encstr="A"; //encoder string
 int add,subtract;
@@ -41,14 +41,14 @@ int encode(int c){
 int main(int argc,char **argv){
     add=0;
     subtract=0;
-    output=stdout;
-    input=stdin;
-    errors=stderr;
+    outfile=stdout;
+    infile=stdin;
+    errfile=stderr;
     int debug=1; //default is on
     for(int i=0;i<argc;i++){
         //part1-debug
         if(debug){
-            fprintf(errors,"%s \n",argv[i]);
+            fprintf(errfile,"%s \n",argv[i]);
         }
         if(strcmp(argv[i],"-D")==0){
             debug=0;
@@ -69,20 +69,42 @@ int main(int argc,char **argv){
             encstr = argv[i]+2;
             subtract=1;
         }
+
+        //part3-files
+        if(strncmp(argv[i],"-i",2)==0){
+            FILE* tmp = fopen(argv[i]+2,"r"); //argv[i]+2 aka fname
+            if(tmp!= NULL){
+                infile = tmp;
+            }
+            else{
+                fprintf(errfile,"fopen() fails\n");
+                exit(1);
+            }
+        }
+        if(strncmp(argv[i],"-o",2)==0){
+            FILE* tmp = fopen(argv[i]+2,"w");
+            if(tmp!= NULL){
+                outfile = tmp;
+            }
+            else{
+                 fprintf(errfile,"fopen() fails\n");
+                 exit(1);
+            }
+        }
     }
 
     
     idx=0; 
-    while(feof(input)==0){//we have more input
-        int c = fgetc(input);
+    while(feof(infile)==0){//we have more input
+        int c = fgetc(infile);
         if(encstr[idx]=='\0'){//cyclic
             idx=0;
         }
         c = encode(c);
         if(c!=EOF){ //handle last garbage char
-            fputc(c,output);
+            fputc(c,outfile);
         }
     }
-    fclose(output);
+    fclose(outfile);
     return 0;
 }
